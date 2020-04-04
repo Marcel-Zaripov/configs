@@ -1,0 +1,56 @@
+#!/bin/bash
+
+set -eu
+
+cd $(dirname $(realpath $0))
+
+# check if brew installed, if not install
+type brew &> /dev/null || \
+	(echo "Homebrew not installed! Installing...";
+		/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)")
+
+# install bundle with Brewfile
+brew bundle --file=./Brewfile
+
+# make brew bash the default one
+echo "/usr/local/bin/bash" >> /etc/shells
+chsh -s /usr/local/bin/bash
+
+# powerline setup
+# python is always present on mac
+# so only check for pip
+type pip &> /dev/null || sudo easy_install pip
+
+# xcode tools are required for powerline
+xcode-select --install
+pip install --user powerline-status powerline-gitstatus
+
+
+# link powerline configs
+powerline_conf_dir=Library/Python/2.7/lib/python/site-packages/powerline/config_files
+ln -sf powerline/colorschemes/shell/default.json \
+	$HOME/$powerline_conf_dir/colorschemes/shell/default.json
+ln -sf powerline/themes/shell/default.json \
+	$HOME/$powerline_conf_dir/themes/shell/default.json
+powerline-daemon —-replace
+
+
+# install iterm color scheme and patched powerline font
+# this will open popups, font one needs a click on "install"
+open iterm2/themes/Builtin_Solarized_dark.itermcolors
+open powerline/fonts/Meslo_LG_L_DZ_Regular_for_Powerline.ttf
+echo "Installed one iterm colorscheme. More on: https://iterm2colorschemes.com"
+echo "Installed powerline patched font. More on: https://github.com/powerline/fonts"
+echo "Don't forget to import iterm2 profile"
+
+# alfred preferences
+./alfred import
+
+# add k8s completion to bash_completion.d
+kubectl completion bash >/usr/local/etc/bash_completion.d/kubectl
+
+# link confs
+ln -sf .bashrc $HOME/.bashrc
+ln -sf .bashrc.work $HOME/.bashrc.work
+ln -sf .bash_profile $HOME/.bash_profile
+ln -sf .gitconfig $HOME/.gitconfig

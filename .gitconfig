@@ -1,0 +1,62 @@
+# Global git configuration
+
+# requires git >= 2.13
+[includeIf "gitdir:~/personal/"]
+    path = .gitconfig-personal
+
+[includeIf "gitdir:~/projects/"]
+    path = .gitconfig-work
+
+[credential]
+    helper = cache --timeout=0
+
+[push]
+    default = simple
+
+[alias]
+    a = "add"
+    aa = "add --all"
+    ai = "add --interactive"
+    ap = "add --patch"
+    co = checkout
+    br = branch
+    ci = commit
+    cae = "commit --amend --no-edit"
+    can = "commit --amend --no-verify"
+    caen = "commit --amend --no-edit --no-verify"
+    cm = "commit -m"
+    st = status
+    s = status
+    # No multiple origins. Need to figure out to interpolate sed pattern
+    # Return these: rems=$(git remote | xargs | sed 's/ /|/g'); 
+    fb = "!f () { ref=$(opt="refs/heads"; [[ "$1" == "-a" ]] && opt=""; git for-each-ref --format='%(refname:short)' $opt | fzf --ansi --tac); br=$(echo $ref | sed -E -e 's/^origin\\///g'); git co $br; }; f"
+    lo = log --pretty=format:"%C(yellow)%h\\ %ad%Cred%d\\ %Creset%s%Cblue\\ [%an]" --decorate --date=short
+    tree = log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(bold yellow)%d%C(reset)' --all
+    pu = !git push -u origin HEAD
+    ign = "!f() { curl -L -s https://www.gitignore.io/api/$@; }; f"
+
+[log]
+    decorate = short
+
+[merge]
+    tool = vimdiff
+
+[core]
+    editor = kak
+    excludesfile = ~/.gitignore
+
+[color]
+    ui = auto
+    interactive = auto
+
+[interactive]
+    singleKey = true
+
+[pull]
+    rebase = true
+
+[rerere]
+    enabled = true
+
+[include]
+    path = ~/.gitconfig_local

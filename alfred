@@ -1,0 +1,40 @@
+#!/bin/bash
+
+set -eu
+
+cd $(dirname $(realpath $0))
+
+# do not allow to source
+[[ $_ != $0 ]] || exit 1
+
+# alfred preferences home
+# use double quote because of space in dirname
+alfred_path="$HOME/Library/Application Support/Alfred"
+pref_dir="Alfred.alfredpreferences"
+archive_name="alfred_pref.tar.gz"
+repo_top=$(git rev-parse --show-toplevel)
+
+
+export() {
+	echo "Exporting alfred preferences..."
+	pushd "$alfred_path"
+	tar -czvf $repo_top/$archive_name -C $pref_dir .
+	popd
+}
+
+
+import() {
+	echo "Importing alfred preferences..."
+	pushd "$alfred_path"
+	mkdir -p $pref_dir
+	tar -xf $repo_top/$archive_name -C $pref_dir
+	popd
+}
+
+
+if declare -f "$1" &> /dev/null; then
+	"$@"
+else
+	echo "Function $1 not recognized" >&2
+	exit 1
+fi

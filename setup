@@ -54,3 +54,8 @@ ln -sf .bashrc $HOME/.bashrc
 ln -sf .bashrc.work $HOME/.bashrc.work
 ln -sf .bash_profile $HOME/.bash_profile
 ln -sf .gitconfig $HOME/.gitconfig
+
+# xdg configs (TODO: add kakoune conf)
+mkdir -p $XDG_CONFIG_HOME/htop
+ln -sf htoprc $XDG_CONFIG_HOME/htop/htoprc
+

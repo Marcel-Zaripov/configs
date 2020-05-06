@@ -29,7 +29,6 @@ brew "ipcalc"              # display CIDR ranges
 brew "iproute2mac"         # use iproute2 on a mac
 brew "jq"                  # JSON manipulator
 brew "kakoune"             # vim style editor
-brew "python-yq"           # like jq for YAML
 brew "derailed/k9s/k9s"    # k8s dashboard
 brew "kubectx"             # change k8s context
 brew "kubens"              # change k8s namespaces
